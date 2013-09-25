@@ -7,10 +7,10 @@
 <title>글을 쓰자꾸나</title>
 </head>
 <body style="background-color: black">
-	<h1 style="color: white" align="center">어서옵쇼.</h1>
-	<h2 style="color: white" align="center">글을 쓰고 싶다굽쇼? 아래를 눌러줍쇼.</h2>
+	<h1 style="color: white" align="center">어서오세요.</h1>
+	<h2 style="color: white" align="center">기억하고 싶은 순간을 사진과 글로 남기세요.</h2>
 	<h6 style="color: white" align="center">href는 어떻게 정렬하지...</h6>
-	<a href="board/form" style="color: yellow"> 문방사우를 준비하라. </a>
+	<a href="board/form" style="color: yellow"> 순간 남기기 </a>
 
 </body>
 </html>
