@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>글을 쓰자꾸나</title>
+<title>우노포토</title>
 </head>
 <body style="background-color: black">
 	<h1 style="color: white" align="center">어서오세요.</h1>
