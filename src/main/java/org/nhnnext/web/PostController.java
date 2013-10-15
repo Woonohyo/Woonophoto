@@ -1,8 +1,6 @@
 package org.nhnnext.web;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.nhnnext.repository.PostRepository;
 import org.nhnnext.support.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +22,10 @@ public class PostController {
 		return "post";
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public String create(Post post, MultipartFile photofile) throws UnsupportedEncodingException {
-		FileUploader.upload(photofile);
-		String encodedFileName = photofile.getOriginalFilename();
+	@RequestMapping(value = "", method=RequestMethod.POST)
+	public String create(Post post, MultipartFile photoFile) throws UnsupportedEncodingException {
+		FileUploader.upload(photoFile);
+		String encodedFileName = photoFile.getOriginalFilename();
 		post.setFileName(encodedFileName);
 		Post savedPost = postRepository.save(post);
 		return "redirect:/post/" + savedPost.getId();

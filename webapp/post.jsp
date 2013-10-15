@@ -13,7 +13,7 @@
 			type="text" name="title" id="title" size="50"> <br> <label
 			for="contents" style="color: white"> 내용 </label> <br>
 		<textarea name="contents" cols="60" rows="8"> 내용을 입력해주세요. </textarea>
-		<br> <input type="file" name="photofile" size="40"> <input
+		<br> <input type="file" name="photoFile" size="40"> <input
 			type="submit" value="submit">
 	</form>
 </body>
