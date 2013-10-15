@@ -22,8 +22,9 @@ public class PostController {
 		return "post";
 	}
 
-	@RequestMapping(value = "", method=RequestMethod.POST)
-	public String create(Post post, MultipartFile photoFile) throws UnsupportedEncodingException {
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public String create(Post post, MultipartFile photoFile)
+			throws UnsupportedEncodingException {
 		FileUploader.upload(photoFile);
 		String encodedFileName = photoFile.getOriginalFilename();
 		post.setFileName(encodedFileName);
@@ -36,5 +37,21 @@ public class PostController {
 		Post savedPost = postRepository.findOne(id);
 		model.addAttribute("post", savedPost);
 		return "viewPost";
+	}
+
+	@RequestMapping(value = "/{id}/modify", method = RequestMethod.POST)
+	public String modify(@PathVariable Long id, Post post, MultipartFile photoFile) {
+		FileUploader.upload(photoFile);
+		post.setFileName((photoFile.getOriginalFilename()));
+		postRepository.delete(id);
+		post.setId(id);
+		Post modifiedPost = postRepository.save(post);
+		return "redirect:/post/" + modifiedPost.getId();
+	}
+
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+	public String delete(@PathVariable Long id, Post post, MultipartFile photoFile) {
+		postRepository.delete(id);
+		return "redirect:/";
 	}
 }
