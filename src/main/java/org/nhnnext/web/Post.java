@@ -1,10 +1,15 @@
 package org.nhnnext.web;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Post {
@@ -20,6 +25,12 @@ public class Post {
 	
 	@Column(length = 1000, nullable = true)
 	private String fileName;
+	
+	@OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+	private List<Comment> comments;
+	
+	@ManyToOne
+	private User user;
 	
 	public Long getId() {
 		return id;
@@ -50,5 +61,16 @@ public class Post {
     public String toString() {
         return "Board [title=" + title + ", contents=" + contents + "]";
     }
-	
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

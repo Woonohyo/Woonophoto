@@ -1,7 +1,12 @@
 package org.nhnnext.web;
 
 import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpSession;
+
+import org.nhnnext.repository.CommentRepository;
 import org.nhnnext.repository.PostRepository;
+import org.nhnnext.repository.UserRepository;
 import org.nhnnext.support.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private CommentRepository commentRepository;
 
 	@RequestMapping("/new")
 	public String post() {
@@ -23,18 +34,20 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public String create(Post post, MultipartFile photoFile)
+	public String create(Post post, MultipartFile photoFile, HttpSession session)
 			throws UnsupportedEncodingException {
 		FileUploader.upload(photoFile);
-		String encodedFileName = photoFile.getOriginalFilename();
-		post.setFileName(encodedFileName);
+		post.setFileName(photoFile.getOriginalFilename());
+		String currentUser = (String)session.getAttribute("username");
+		post.setUser(userRepository.findOne(currentUser));
 		Post savedPost = postRepository.save(post);
 		return "redirect:/post/" + savedPost.getId();
 	}
 
 	@RequestMapping("/{id}")
-	public String view(@PathVariable Long id, Model model) {
+	public String view(@PathVariable Long id, Model model, Model modelComment) {
 		Post savedPost = postRepository.findOne(id);
+		modelComment.addAttribute("comments", savedPost.getComments());
 		model.addAttribute("post", savedPost);
 		return "viewPost";
 	}
@@ -43,10 +56,12 @@ public class PostController {
 	public String modify(@PathVariable Long id, Post post, MultipartFile photoFile) {
 		FileUploader.upload(photoFile);
 		post.setFileName((photoFile.getOriginalFilename()));
-		postRepository.delete(id);
-		post.setId(id);
-		Post modifiedPost = postRepository.save(post);
-		return "redirect:/post/" + modifiedPost.getId();
+		Post oldPost = postRepository.findOne(id);
+		oldPost.setTitle(post.getTitle());
+		oldPost.setContents(post.getContents());
+		oldPost.setFileName(photoFile.getOriginalFilename());
+		postRepository.save(oldPost);
+		return "redirect:/post/" + oldPost.getId();
 	}
 
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
@@ -54,4 +69,11 @@ public class PostController {
 		postRepository.delete(id);
 		return "redirect:/";
 	}
+	
+	@RequestMapping("/list")
+	public String list(Model model) {
+		model.addAttribute("posts", postRepository.findAll());
+		return "list";
+	}
+	
 }
