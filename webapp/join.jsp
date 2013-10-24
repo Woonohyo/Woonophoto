@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>날래날래 정보 내놓으라요</title>
 </head>
-<body style="background-color: MediumSeaGreen">
+<body style="background-color: #f1efeb">
 	<center>
 		<h1 style="color: white">헐.. 이 비루한 서비스의 회원이 되겠다니 일단 축하드립니다.</h1>
 		<h2 style="color: yellow">사용하실 이름과 비밀번호만 입력해주시면 됩니다. </h2>

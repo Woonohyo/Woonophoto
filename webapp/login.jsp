@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>당신은 누구신가요?</title>
 </head>
-<body style="background-color: silver">
+<body style="background-color: #f1efeb">
 	<center>
 		<h1 style="color: white">회원 전용 서비스를 이용하시려면</h1>
 		<h2 style="color: yellow">일단 10만원을 입금한 뒤 로그인을 해주세요.</h2>

@@ -38,7 +38,7 @@ public class Comment {
 	public Comment(String contents, Post post, User user) {
 		this.post = post;
 		this.contents = contents;
-		this.user = user;
+		this.setUser(user);
 	}
 
 	public Long getId() {
@@ -55,5 +55,13 @@ public class Comment {
 
 	public void setContents(String contents) {
 		this.contents = contents;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

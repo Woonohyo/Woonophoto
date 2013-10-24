@@ -30,6 +30,6 @@ public class CommentController {
 		Comment comment = new Comment(contents, post, userRepository.findOne(currentUser));
 		commentRepository.save(comment);
 		model.addAttribute("comments", commentRepository.findAll());
-		return "redirect:/post/" + id;
+		return "redirect:/post/list";
 	}
 }

@@ -71,8 +71,9 @@ public class PostController {
 	}
 	
 	@RequestMapping("/list")
-	public String list(Model model) {
+	public String list(Model model, Model model2) {
 		model.addAttribute("posts", postRepository.findAll());
+		model2.addAttribute("comments", commentRepository.findAll());
 		return "list";
 	}
 	
