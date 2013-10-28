@@ -1,0 +1,113 @@
+@CHARSET "UTF-8";
+/* System Name, CSS Version_Creater_Date */
+/* Common */
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textare a,button,select
+	{
+	margin: 0;
+	padding: 0
+}
+
+body,input,textarea,select,button,table {
+	font-family: '돋움', Dotum, AppleGothic, sans- serif;
+	font-size: 1em
+}
+
+img,fieldset {
+	border: 0
+}
+
+ul,ol {
+	list-style: none
+}
+
+em,address {
+	font-style: normal
+}
+
+a {
+	text-decoration: none
+}
+
+a:hover,a:active,a:focus {
+	text-decoration: underline
+}
+
+div#wrap {
+	width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+header>h1 {
+	font-family: Raleway, Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 2.7em; /* 기본 폰트가 1em일 때, 그에 대해 몇 배로 크게 하는지에 대한 단위 */
+	font-weight: 400; /* default: 400 */
+	letter-spacing: 0.01em;
+	text-align: center;
+	margin-top: 100px;
+	margin-bottom: 20px;
+	text-align: center
+}
+
+div#postArea {
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+#postArea textarea {
+	width: 550px;
+	margin: 5px 0px;
+	resize:none;
+}
+
+#postArea input[type=text] {
+	height: 25px;
+	border: 1px solid white;
+	margin: 20px 0px;
+}
+
+#postArea input[type=submit],input[type=file] {
+	margin-top: 10px;
+	padding: 5px;
+}
+
+#postArea input[type=submit] {
+	width: 70px;
+	height: 25px;
+	text-align: center;
+	font-family: verdana;
+	background-color: #6495ED;
+	border: 2px solid white;
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	color: white;
+	font-size: 15px;
+	line-height: 10px;
+}
+
+#postArea input[type=reset] {
+	width: 70px;
+	height: 25px;
+	text-align: center;
+	font-family: AppleGothic;
+	background-color: #CD5C5C;
+	font-size: 15px;
+	line-height: 10px;
+	border: 2px solid white;
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	color: white;
+}
+
+#postArea input[type=file] {
+	width: 180px;
+	height: 25px;
+	text-align: center;
+	font-family: AppleGothic;
+	font-size: 15px;
+	line-height: 10px;
+	border: 2px solid white;
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	color: black;
+}
