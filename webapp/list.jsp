@@ -5,6 +5,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="/javascripts/jquery-1.10.2.min.js"></script>
+<script src="/javascripts/lightbox-2.6.min.js"></script>
+<link rel="stylesheet" media="screen" type="text/css"
+	href="/stylesheets/lightbox.css">
 <title>Woonophoto</title>
 <style>
 /* System Name, CSS Version_Creater_Date */
@@ -209,9 +213,9 @@ div#top_cover {
 	}
 
 	function toggleComments(e) {
-		var commentBodyNode = e.target.parentElement.nextElementSibling, 
-				style = window.getComputedStyle(commentBodyNode), 
-				display = style.getPropertyValue('display');
+		var commentBodyNode = e.target.parentElement.nextElementSibling, style = window
+				.getComputedStyle(commentBodyNode), display = style
+				.getPropertyValue('display');
 
 		if (display == 'none')
 			commentBodyNode.style.display = 'block';
@@ -256,7 +260,9 @@ div#top_cover {
 			</div>
 			<div id="post_screen">
 				<c:if test="${not empty post.fileName}">
-					<img src="/images/${post.fileName}" width="448" height="444">
+					<a href="/images/${post.fileName}" data-lightbox="${post.fileName}">
+						<img src="/images/${post.fileName}" width="448" height="444">
+					</a>
 				</c:if>
 				<c:if test="${empty post.fileName}">
 					<img src="/images/noImageUploaded.png" width="448" height="444">
