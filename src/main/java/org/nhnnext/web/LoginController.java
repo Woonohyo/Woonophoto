@@ -23,7 +23,7 @@ public class LoginController {
 		if (userRepository.exists(username)) {
 			if (userRepository.findOne(username).getPassword().equals(password)) {
 				session.setAttribute("username", username);
-				return "redirect:/";
+				return "redirect:/post/list";
 			} else
 				return "/";
 		} else

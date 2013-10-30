@@ -23,7 +23,7 @@ public class CommentController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@RequestMapping(value="/post/{id}/comments", method=RequestMethod.POST)
+	@RequestMapping(value="/post/list/{id}/newComment", method=RequestMethod.POST)
 	public String create(@PathVariable Long id, String contents, Model model, HttpSession session) {
 		Post post = postRepository.findOne(id);
 		String currentUser = (String)session.getAttribute("username");

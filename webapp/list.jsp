@@ -37,7 +37,7 @@ a {
 }
 
 a:hover,a:active,a:focus {
-	text-decoration: none
+	text-decoration: underline
 }
 
 div#post_info {
@@ -165,15 +165,62 @@ div#top_cover {
 	margin-right: 5px;
 }
 
-#comment {
+.comment {
 	text-align: left;
 	background-color: #989898;
 	color: white;
 	height: auto;
 	padding: 10px;
+	display: none;
+}
+
+.numComment {
+	text-align: left;
+}
+
+.showComment {
+	text-align: right;
+	display: inline;
 }
 </style>
 
+<script>
+	function initPage() {
+		console.log('page has been loaded');
+		countComments();
+		registerEvents();
+	}
+
+	function countComments() {
+		var comment = document.querySelectorAll('.comment');
+		for ( var i = 0; i < comment.length; i++) {
+			var currentNode = comment[i];
+			var nBrListCount = currentNode.querySelectorAll('br').length;
+			currentNode.previousElementSibling.previousElementSibling.innerText = nBrListCount
+					+ "개의 댓글이 있습니다.";
+		}
+	}
+
+	function registerEvents() {
+		var eleList = document.getElementsByClassName('showComment');
+		for ( var i = 0; i < eleList.length; i++) {
+			eleList[i].addEventListener('click', toggleComments, false);
+		}
+	}
+
+	function toggleComments(e) {
+		var commentBodyNode = e.target.parentElement.nextElementSibling, 
+				style = window.getComputedStyle(commentBodyNode), 
+				display = style.getPropertyValue('display');
+
+		if (display == 'none')
+			commentBodyNode.style.display = 'block';
+		else
+			commentBodyNode.style.display = 'none';
+	}
+
+	window.onload = initPage;
+</script>
 
 </head>
 <body style="background-color: #F2F2F2">
@@ -204,27 +251,34 @@ div#top_cover {
 	<c:forEach items="${posts}" var="post">
 		<div id="post_cover">
 			<div id="post_info">
-				게시물번호: ${post.id}<br> 제목: ${post.title}<br> 내용:
+				PostID: ${post.id}<br> Title: ${post.title}<br> Contents:
 				${post.contents}<br>
 			</div>
 			<div id="post_screen">
 				<c:if test="${not empty post.fileName}">
-					<img src="/images/${post.fileName}" width="465" height="444">
+					<img src="/images/${post.fileName}" width="448" height="444">
 				</c:if>
 				<c:if test="${empty post.fileName}">
-					<img src="/images/noImageUploaded.png" width="465" height="444">
+					<img src="/images/noImageUploaded.png" width="448" height="444">
 				</c:if>
 			</div>
 			<br>
-			<div id="comment">
-				<!-- 댓글 보여주는 부분 -->
+			<!-- 댓글 보여주는 부분 -->
+			<div class="numComment"></div>
+			<div class="showComment">
+				<a>댓글 보기</a>
+			</div>
+			<div class="comment">
+				<hr>
 				<c:forEach items="${post.comments}" var="comment">
-					[${comment.user.username}] ${comment.contents}<br>
+					[${comment.user.username}] ${comment.contents} <br>
+					<hr>
 				</c:forEach>
 			</div>
+
 			<hr>
 			<div id="newComment">
-				<form action="/post/${post.id}/comments" method="post">
+				<form action="/post/list/${post.id}/newComment" method="post">
 					<textarea name="contents" rows="1" cols="54"
 						placeholder="share your opinion"></textarea>
 					<br> <input type="submit" value="Comment">

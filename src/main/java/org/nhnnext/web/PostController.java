@@ -76,5 +76,4 @@ public class PostController {
 		model2.addAttribute("comments", commentRepository.findAll());
 		return "list";
 	}
-	
 }
