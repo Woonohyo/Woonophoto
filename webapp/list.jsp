@@ -193,6 +193,8 @@ div#top_cover {
 		console.log('page has been loaded');
 		countComments();
 		registerEvents();
+		addEventToCommentSubmitButton();
+		
 	}
 
 	function countComments() {
@@ -221,6 +223,26 @@ div#top_cover {
 			commentBodyNode.style.display = 'block';
 		else
 			commentBodyNode.style.display = 'none';
+	}
+
+	function addEventToCommentSubmitButton() {
+		var formList = document.querySelectorAll('#newComment input[type=submit]');
+		for ( var j = 0; j < formList.length; j++) {
+			formList[j].addEventListener('click', writeComments, false);
+		}	
+	}
+
+	function writeComments(e) {
+		e.preventDefault();
+		
+		var eleForm = e.currentTarget.form;
+		var oFormData = new FormData(eleForm);
+		
+		console.log("writeComments is called!");
+		
+		var sID = eleForm[0].value;
+		var url = "/post/list" + sID + "/newComment.json";
+		debugger;
 	}
 
 	window.onload = initPage;
@@ -260,7 +282,7 @@ div#top_cover {
 			</div>
 			<div id="post_screen">
 				<c:if test="${not empty post.fileName}">
-					<a href="/images/${post.fileName}" data-lightbox="${post.fileName}">
+					<a href="/images/${post.fileName}" data-lightbox="Woonophoto">
 						<img src="/images/${post.fileName}" width="448" height="444">
 					</a>
 				</c:if>
@@ -269,6 +291,7 @@ div#top_cover {
 				</c:if>
 			</div>
 			<br>
+
 			<!-- 댓글 보여주는 부분 -->
 			<div class="numComment"></div>
 			<div class="showComment">
@@ -285,16 +308,17 @@ div#top_cover {
 			<hr>
 			<div id="newComment">
 				<form action="/post/list/${post.id}/newComment" method="post">
+					<input type="hidden" name="id" value="${post.id}">
 					<textarea name="contents" rows="1" cols="54"
 						placeholder="share your opinion"></textarea>
 					<br> <input type="submit" value="Comment">
 				</form>
-				<div id="delete">
-					<form action="/post/${post.id}/delete" method="post"
-						enctype="multipart/form-data">
-						<input type="submit" value="Delete">
-					</form>
-				</div>
+			</div>
+			<div id="delete">
+				<form action="/post/${post.id}/delete" method="post"
+					enctype="multipart/form-data">
+					<input type="submit" value="Delete">
+				</form>
 			</div>
 		</div>
 
