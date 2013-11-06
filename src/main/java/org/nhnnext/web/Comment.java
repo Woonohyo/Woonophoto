@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 public class Comment {
 	@Id
@@ -17,6 +19,7 @@ public class Comment {
 	@Column(length = 1000, nullable = true)
 	private String contents;
 
+	@JsonIgnore
 	@ManyToOne
 	private Post post;
 

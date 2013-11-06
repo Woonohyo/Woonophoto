@@ -41,7 +41,7 @@ public class PostController {
 		String currentUser = (String)session.getAttribute("username");
 		post.setUser(userRepository.findOne(currentUser));
 		Post savedPost = postRepository.save(post);
-		return "redirect:/post/" + savedPost.getId();
+		return "redirect:/post/list";
 	}
 
 	@RequestMapping("/{id}")
@@ -67,7 +67,7 @@ public class PostController {
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
 	public String delete(@PathVariable Long id, Post post, MultipartFile photoFile) {
 		postRepository.delete(id);
-		return "redirect:/";
+		return "redirect:/post/list";
 	}
 	
 	@RequestMapping("/list")

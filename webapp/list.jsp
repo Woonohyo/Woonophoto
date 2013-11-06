@@ -41,7 +41,7 @@ a {
 }
 
 a:hover,a:active,a:focus {
-	text-decoration: underline
+	text-decoration: none
 }
 
 div#post_info {
@@ -51,6 +51,13 @@ div#post_info {
 	margin-left: auto;
 	color: white;
 	margin-bottom: 5px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: black;
+	padding: 5px;
+	font-family: tahoma;
+	letter-spacing: 1px;
+
 }
 
 div#post_screen {
@@ -70,6 +77,61 @@ div#post_cover {
 	text-align: center;
 	height: auto;
 	margin-bottom: 62px;
+}
+
+div#new_post {
+	background-color: #DEDEDE;
+	margin-top: 62px;
+	padding: 50px;
+	width: 40%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	height: auto;
+	margin-bottom: 62px;
+}
+
+#new_post input[name=title] {
+	padding: 5px;
+}
+
+#new_post textarea[name=contents] {
+	padding: 5px;
+}
+
+#new_post input[type=submit] {
+	width: 70px;
+	height: 25px;
+	text-align: center;
+	font-family: verdana;
+	background-color: #006699;
+	border: 2px solid white;
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	color: white;
+	font-size: 15px;
+	line-height: 10px;
+	margin-right: 5px;
+	margin-top: 5px;
+	align: right;
+}
+
+#new_post input[type=reset] {
+	width: 70px;
+	height: 25px;
+	text-align: center;
+	font-family: verdana;
+	background-color: #006699;
+	border: 2px solid white;
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	color: white;
+	font-size: 15px;
+	line-height: 12px;
+	margin-right: 5px;
+	margin-top: 5px;
+	align: right;
 }
 
 div#page_end {
@@ -110,6 +172,13 @@ div#top_cover {
 	color: white;
 }
 
+#login input[type=text] {
+padding: 1px;
+}
+
+#login input[type=password] {
+padding: 1px;
+}
 #login input[type=submit] {
 	margin-right: 5px;
 	width: 70px;
@@ -169,6 +238,13 @@ div#top_cover {
 	margin-right: 5px;
 }
 
+#newComment input[name=contents] {
+	padding: 5px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: gray;
+}
+
 .comment {
 	text-align: left;
 	background-color: #989898;
@@ -194,7 +270,7 @@ div#top_cover {
 		countComments();
 		registerEvents();
 		addEventToCommentSubmitButton();
-		
+
 	}
 
 	function countComments() {
@@ -226,23 +302,32 @@ div#top_cover {
 	}
 
 	function addEventToCommentSubmitButton() {
-		var formList = document.querySelectorAll('#newComment input[type=submit]');
+		var formList = document
+				.querySelectorAll('#newComment input[type=submit]');
 		for ( var j = 0; j < formList.length; j++) {
 			formList[j].addEventListener('click', writeComments, false);
-		}	
+		}
 	}
 
 	function writeComments(e) {
 		e.preventDefault();
-		
 		var eleForm = e.currentTarget.form;
 		var oFormData = new FormData(eleForm);
-		
-		console.log("writeComments is called!");
-		
 		var sID = eleForm[0].value;
-		var url = "/post/list" + sID + "/newComment.json";
-		debugger;
+		var url = "/post/list/" + sID + "/newComment.json";
+		var url2 = eleForm.action + ".json";
+		var request = new XMLHttpRequest();
+		request.open("POST", url2, true);
+		request.onreadystatechange = function() {
+			if (request.readyState == 4 && request.status == 200) {
+				var obj = JSON.parse(request.responseText);
+				var eleCommentList = eleForm.parentElement.previousElementSibling.previousElementSibling;
+				eleCommentList.insertAdjacentHTML("beforeend", "["
+						+ obj.user.username + "] " + obj.contents + "<br><hr>");
+			}
+		}
+
+		request.send(oFormData);
 	}
 
 	window.onload = initPage;
@@ -273,6 +358,19 @@ div#top_cover {
 			</c:if>
 		</div>
 	</div>
+	
+	<!-- 새로운 포스트 작성하는 부분 -->
+	<div id="new_post">
+		<form action="/post" method="post" enctype="multipart/form-data">
+			<input type="text" name="title" id="newpost_title" size="61"
+				placeholder="Write a title..."> <br> <br>
+			<textarea name="contents" cols="60" rows="8"
+				placeholder="What's on your mind?"></textarea>
+			<br> <input type="file" name="photoFile" size="40">  <input
+				type="reset" value="reset"> <input
+				type="submit" value="submit" alt="Submit">
+		</form>
+	</div>
 
 	<c:forEach items="${posts}" var="post">
 		<div id="post_cover">
@@ -283,11 +381,11 @@ div#top_cover {
 			<div id="post_screen">
 				<c:if test="${not empty post.fileName}">
 					<a href="/images/${post.fileName}" data-lightbox="Woonophoto">
-						<img src="/images/${post.fileName}" width="448" height="444">
+						<img src="/images/${post.fileName}" width="506" height="506">
 					</a>
 				</c:if>
 				<c:if test="${empty post.fileName}">
-					<img src="/images/noImageUploaded.png" width="448" height="444">
+					<img src="/images/noImageUploaded.png" width="506" height="506">
 				</c:if>
 			</div>
 			<br>
@@ -304,13 +402,12 @@ div#top_cover {
 					<hr>
 				</c:forEach>
 			</div>
-
+			<!-- 코멘트 및 삭제하는 버튼 -->
 			<hr>
 			<div id="newComment">
 				<form action="/post/list/${post.id}/newComment" method="post">
-					<input type="hidden" name="id" value="${post.id}">
-					<textarea name="contents" rows="1" cols="54"
-						placeholder="share your opinion"></textarea>
+					<input type="hidden" name="id" value="${post.id}"> <input
+						name="contents" size=60 placeholder="Write a comment..."><br>
 					<br> <input type="submit" value="Comment">
 				</form>
 			</div>
