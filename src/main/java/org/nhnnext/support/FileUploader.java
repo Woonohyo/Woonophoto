@@ -12,6 +12,7 @@ public class FileUploader {
 			return null;
 		}
 		transferToAttachmentDir(multipartFile);
+		System.out.println("Returning PHOTO FILE");
 		return multipartFile.getOriginalFilename();
 	}
 
