@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class CommentController {
@@ -24,15 +25,15 @@ public class CommentController {
 	@Autowired
 	private UserRepository userRepository;
 	
-//	@RequestMapping(value="/post/list/{id}/newComment", method=RequestMethod.POST)
-//	public String create(@PathVariable Long id, String contents, Model model, HttpSession session) {
-//		Post post = postRepository.findOne(id);
-//		String currentUser = (String)session.getAttribute("username");
-//		Comment comment = new Comment(contents, post, userRepository.findOne(currentUser));
-//		commentRepository.save(comment);
-//		model.addAttribute("comments", commentRepository.findAll());
-//		return "redirect:/post/list";
-//	}
+	@RequestMapping(value="/post/list/{id}/newComment", method=RequestMethod.POST)
+	public String create(@PathVariable Long id, String contents, Model model, HttpSession session) {
+		Post post = postRepository.findOne(id);
+		String currentUser = (String)session.getAttribute("username");
+		Comment comment = new Comment(contents, post, userRepository.findOne(currentUser));
+		commentRepository.save(comment);
+		model.addAttribute("comments", commentRepository.findAll());
+		return "redirect:/post/list";
+	}
 	
 	@RequestMapping(value="/post/list/{id}/newComment.json", method=RequestMethod.POST)
 	public @ResponseBody Comment createAndShow(@PathVariable Long id, String contents, HttpSession session) {
@@ -40,5 +41,11 @@ public class CommentController {
 		String currentUser = (String)session.getAttribute("username");
 		Comment comment = new Comment(contents, post, userRepository.findOne(currentUser));
 		return commentRepository.save(comment);
+	}
+	
+	@RequestMapping(value = "/post/{id}/delComment", method = RequestMethod.POST)
+	public String deleteComment(@PathVariable Long id) {
+		commentRepository.delete(id);
+		return "redirect:/post/list";
 	}
 }

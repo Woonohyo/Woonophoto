@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginController {
@@ -29,11 +30,26 @@ public class LoginController {
 		} else
 			return "/";
 	}
+	
+	@RequestMapping(value = "/logincheck.json", method = RequestMethod.POST)
+	public @ResponseBody String loginMobile(String username, String password, HttpSession session) {
+		String success = "{\"code\":200, \"result\":\"OK\"}";
+		String fail = "{\"code\":404, \"result\":\"FAIL\"}";
+		if (userRepository.exists(username)) {
+			if (userRepository.findOne(username).getPassword().equals(password)) {
+				session.setAttribute("username", username);
+				return success;
+			} else
+				return fail;
+		} else
+			return fail;
+	}
 
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("username");
-		session.removeAttribute("password");
+		//session.removeAttribute("username");
+		//session.removeAttribute("password");
+		session.invalidate();
 		return "redirect:/";
 	}
 

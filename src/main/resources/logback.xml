@@ -16,8 +16,8 @@
 	<logger name="org.hibernate.type" level="WARN" />
 	<logger name="org.hibernate.type.BasicTypeRegistry" level="WARN" />
 	<logger name="org.hibernate.descriptor.sql.BasicExtractor" level="WARN" />
-	<logger name="org.springframework" level="INFO" />
-	<logger name="org.springframework.web.bind.annotation.support.HandlerMethodInvoker" level="INFO" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.web.bind.annotation.support.HandlerMethodInvoker" level="WARN" />
 	<logger name="org.springframework.web.servlet.DispatcherServlet" level="INFO" />
 	
 	<!-- ROOT Logger -->

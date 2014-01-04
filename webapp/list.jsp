@@ -57,7 +57,6 @@ div#post_info {
 	padding: 5px;
 	font-family: tahoma;
 	letter-spacing: 1px;
-
 }
 
 div#post_screen {
@@ -140,7 +139,7 @@ div#page_end {
 	bottom: 0px;
 	left: 0px;
 	width: 99%;
-	height: 42px;;
+	height: 42px;
 	background-color: #006699;
 	color: white;
 	padding: 5px;
@@ -173,12 +172,13 @@ div#top_cover {
 }
 
 #login input[type=text] {
-padding: 1px;
+	padding: 1px;
 }
 
 #login input[type=password] {
-padding: 1px;
+	padding: 1px;
 }
+
 #login input[type=submit] {
 	margin-right: 5px;
 	width: 70px;
@@ -245,6 +245,10 @@ padding: 1px;
 	border-color: gray;
 }
 
+.rfloat {
+	float: right;
+}
+
 .comment {
 	text-align: left;
 	background-color: #989898;
@@ -270,6 +274,7 @@ padding: 1px;
 		countComments();
 		registerEvents();
 		addEventToCommentSubmitButton();
+		submitViaXML();
 
 	}
 
@@ -328,6 +333,68 @@ padding: 1px;
 		}
 
 		request.send(oFormData);
+		initPage();
+	}
+
+	function submitViaXML() {
+		var button = document
+				.querySelectorAll('#new_post input[type = submit]');
+		button[0].addEventListener('click', addNewPost, false);
+	}
+
+	// e == addEventListener 가 클릭했을 때 가지고 있는 정보.
+	function addNewPost(e) {
+		e.preventDefault();
+		var url = "/new.json";
+		var eleForm = e.currentTarget.form; // 현재 선택된 form에 대한 변수 생성.
+		var oFormData = new FormData(eleForm); //eleForm에 대해 새로운 formdata 생성.
+		var request = new XMLHttpRequest();
+		request.open("POST", url, true);
+		request.send(oFormData);
+
+		request.onreadystatechange = function() {
+			if (request.readyState == 4 && request.status == 200) {
+				eleForm.reset();
+				var obj = JSON.parse(request.responseText);
+				var status = eleForm.parentNode.nextElementSibling; //Allocating first post_cover
+
+				// postInfo start
+				postInfo = "<div id=\"post_cover\"><div id=\"post_info\">PostID:"
+						+ obj.id
+						+ "<br> Title:"
+						+ obj.title
+						+ "<br> Contents:"
+						+ obj.contents + "<br></div><div id=\"post_screen\">";
+
+				if (obj.fileName != "") {
+					postInfo += "<a href=\"/images/" + obj.fileName +"\" data-lightbox=\"Woonophoto\">\<img src=\"/images/" + obj.fileName + "\" width=\"488\" height=\"506\"></a>";
+				} else {
+					postInfo += "<img src=\"/images/noImageUploaded.png\" width=\"488\" height=\"506\">";
+				}
+				postInfo += "</div><br><div class=\"numComment\"></div><div class=\"showComment\"><a>댓글 보기</a></div><div class=\"comment\"><hr>";
+
+				if (obj.comments != null) {
+					obj.comments
+							.forEach(function(comment) {
+								if (comment != null) {
+									postInfo += "["
+											+ comment.user.username
+											+ "] "
+											+ comment.contents
+											+ "<div class=\"rfloat\"><form id=\"delComButton\" action=\"/post/" + comment.id + "/delComment\" method=\"post\" enctype=\"multipart/form-data\"><a href=\"javascript:;\" onclick=\"document.getElementById('delComButton').submit();\">X</a></form></div><br><hr></div><hr><div id=\"newComment\"><form action=\"/post/list/" + obj.id + "/newComment\" method=\"post\"><input type=\"hidden\" name=\"id\" value=\"" + obj.id + "\"> <input name=\"contents\" size=58 placeholder=\"Write a comment...\"><br> <br> <input type=\"submit\" value=\"Comment\"></form></div><div id=\"delete\"><form action=\"/post/" + obj.id + "/delete\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"submit\" value=\"Delete\"></form></div>";
+											console.log("not null comment");
+								}
+
+							});
+				} else {
+				console.log("null comment");
+				postInfo += "<br></div><hr><div id=\"newComment\"><form action=\"/post/list/" + obj.id + "/newComment\" method=\"post\"><input type=\"hidden\" name=\"id\" value=\"" + obj.id + "\"> <input name=\"contents\" size=58 placeholder=\"Write a comment...\"><br> <br> <input type=\"submit\" value=\"Comment\"></form></div><div id=\"delete\"><form action=\"/post/" + obj.id + "/delete\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"submit\" value=\"Delete\"></form></div>"
+				}								
+				
+				status.insertAdjacentHTML('beforebegin', postInfo);
+				initPage();
+			}
+		}
 	}
 
 	window.onload = initPage;
@@ -358,7 +425,7 @@ padding: 1px;
 			</c:if>
 		</div>
 	</div>
-	
+
 	<!-- 새로운 포스트 작성하는 부분 -->
 	<div id="new_post">
 		<form action="/post" method="post" enctype="multipart/form-data">
@@ -366,12 +433,13 @@ padding: 1px;
 				placeholder="Write a title..."> <br> <br>
 			<textarea name="contents" cols="60" rows="8"
 				placeholder="What's on your mind?"></textarea>
-			<br> <input type="file" name="photoFile" size="40">  <input
-				type="reset" value="reset"> <input
-				type="submit" value="submit" alt="Submit">
+			<br> <input type="file" name="photoFile" size="40"> <input
+				type="reset" value="reset"> <input type="submit"
+				value="submit" alt="Submit">
 		</form>
 	</div>
 
+	<!-- 포스트 뿌려주는 곳.  -->
 	<c:forEach items="${posts}" var="post">
 		<div id="post_cover">
 			<div id="post_info">
@@ -381,11 +449,11 @@ padding: 1px;
 			<div id="post_screen">
 				<c:if test="${not empty post.fileName}">
 					<a href="/images/${post.fileName}" data-lightbox="Woonophoto">
-						<img src="/images/${post.fileName}" width="506" height="506">
+						<img src="/images/${post.fileName}" width="488" height="506">
 					</a>
 				</c:if>
 				<c:if test="${empty post.fileName}">
-					<img src="/images/noImageUploaded.png" width="506" height="506">
+					<img src="/images/noImageUploaded.png" width="488" height="506">
 				</c:if>
 			</div>
 			<br>
@@ -398,7 +466,14 @@ padding: 1px;
 			<div class="comment">
 				<hr>
 				<c:forEach items="${post.comments}" var="comment">
-					[${comment.user.username}] ${comment.contents} <br>
+					[${comment.user.username}] ${comment.contents} <div class="rfloat">
+						<form id="delComButton" action="/post/${comment.id}/delComment"
+							method="post" enctype="multipart/form-data">
+							<a href="javascript:;"
+								onclick="document.getElementById('delComButton').submit();">X</a>
+						</form>
+					</div>
+					<br>
 					<hr>
 				</c:forEach>
 			</div>
@@ -407,8 +482,8 @@ padding: 1px;
 			<div id="newComment">
 				<form action="/post/list/${post.id}/newComment" method="post">
 					<input type="hidden" name="id" value="${post.id}"> <input
-						name="contents" size=60 placeholder="Write a comment..."><br>
-					<br> <input type="submit" value="Comment">
+						name="contents" size=58 placeholder="Write a comment...">
+					<br> <br> <input type="submit" value="Comment">
 				</form>
 			</div>
 			<div id="delete">
@@ -421,10 +496,6 @@ padding: 1px;
 
 		<hr>
 	</c:forEach>
-	<div id="page_end">
-		<a href="/"> <font color="white">[메인 페이지로 돌아가기]</font></a> <a
-			href="/post/new"> <font color="white">[새 포스트 작성하러 가기]</font>
-		</a>
-	</div>
+	<div id="page_end">Woonophoto</div>
 </body>
 </html>
